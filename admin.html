@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>beautystudio.gg | Panel de Turnos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#0C0A09; --dark:#141210; --dark2:#1E1916; --dark3:#2E221E;
+  --gold:#C9A96E; --gold-lt:#DEC28D; --cream:#F8F4EE;
+  --green:#22C55E; --red:#EF4444; --yellow:#F59E0B;
+  --t1:rgba(255,255,255,.90); --t2:rgba(255,255,255,.50);
+  --t3:rgba(255,255,255,.28); --t4:rgba(255,255,255,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--t1);min-height:100vh}
+
+/* LOGIN */
+.login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:2rem;
+}
+.login-box{
+  background:var(--dark);border:1px solid rgba(201,169,110,.15);
+  padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;
+}
+.login-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+  font-weight:400;color:var(--cream);letter-spacing:.1em;margin-bottom:.4rem;
+}
+.login-logo span{color:var(--gold)}
+.login-sub{font-size:.75rem;color:var(--t3);margin-bottom:2rem;letter-spacing:.05em}
+.login-box label{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:.4rem;text-align:left}
+.login-box input{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,169,110,.15);
+  color:var(--cream);padding:.8rem 1rem;font-family:'Outfit',sans-serif;
+  font-size:1rem;outline:none;margin-bottom:1rem;
+}
+.login-box input:focus{border-color:rgba(201,169,110,.45)}
+.btn-login{
+  width:100%;background:var(--gold);color:var(--black);
+  padding:.85rem;font-family:'Outfit',sans-serif;font-size:.75rem;
+  letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+  border:none;cursor:pointer;transition:background .3s;
+}
+.btn-login:hover{background:var(--gold-lt)}
+.login-error{color:#EF4444;font-size:.75rem;margin-top:.75rem;display:none}
+
+/* PANEL */
+.panel{display:none}
+.panel-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,10,9,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(201,169,110,.1);
+  padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+}
+.panel-nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream);letter-spacing:.08em}
+.panel-nav-logo span{color:var(--gold)}
+.panel-nav-right{display:flex;align-items:center;gap:1rem}
+.badge-count{
+  background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);
+  color:#F59E0B;padding:.25rem .75rem;font-size:.7rem;letter-spacing:.1em;border-radius:50px;
+}
+.btn-logout{background:none;border:1px solid rgba(255,255,255,.1);color:var(--t3);padding:.4rem 1rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.btn-logout:hover{border-color:var(--gold);color:var(--gold)}
+
+.panel-body{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+
+/* TABS */
+.tabs{display:flex;gap:1px;background:rgba(201,169,110,.08);margin-bottom:2rem}
+.tab-btn{
+  flex:1;padding:.7rem 1rem;background:var(--dark);
+  border:none;cursor:pointer;font-family:'Outfit',sans-serif;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.tab-btn.active{background:var(--dark2);color:var(--gold)}
+.tab-count{background:rgba(201,169,110,.15);color:var(--gold);padding:.15rem .5rem;border-radius:50px;font-size:.6rem}
+.tab-count.red{background:rgba(239,68,68,.15);color:#EF4444}
+
+/* TURNO CARDS */
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--cream);margin-bottom:1.5rem}
+.turno-card{
+  background:var(--dark);border:1px solid rgba(201,169,110,.1);
+  padding:1.4rem 1.5rem;margin-bottom:.8rem;
+  display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;
+}
+.turno-info{}
+.turno-nombre{font-size:.95rem;font-weight:500;color:var(--cream);margin-bottom:.3rem}
+.turno-meta{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.5rem}
+.turno-badge{
+  font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.25rem .6rem;border-radius:2px;
+}
+.badge-fecha{background:rgba(201,169,110,.1);color:var(--gold)}
+.badge-hora{background:rgba(201,169,110,.1);color:var(--gold)}
+.badge-srv{background:rgba(255,255,255,.06);color:var(--t2)}
+.badge-pendiente{background:rgba(245,158,11,.1);color:#F59E0B}
+.badge-aprobado{background:rgba(34,197,94,.1);color:#22C55E}
+.badge-rechazado{background:rgba(239,68,68,.1);color:#EF4444}
+.turno-tel{font-size:.78rem;color:var(--t3);display:flex;align-items:center;gap:.4rem}
+.turno-nota{font-size:.75rem;color:var(--t3);font-style:italic;margin-top:.4rem}
+
+.turno-actions{display:flex;flex-direction:column;gap:.5rem;min-width:120px}
+.btn-aprobar{
+  background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);
+  color:#22C55E;padding:.6rem 1rem;font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.4rem;
+}
+.btn-aprobar:hover{background:rgba(34,197,94,.25)}
+.btn-rechazar{
+  background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);
+  color:#EF4444;padding:.6rem 1rem;font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.4rem;
+}
+.btn-rechazar:hover{background:rgba(239,68,68,.2)}
+.btn-wpp-cliente{
+  background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);
+  color:#25D366;padding:.6rem 1rem;font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;
+  text-decoration:none;display:flex;align-items:center;justify-content:center;gap:.4rem;
+  transition:all .2s;
+}
+.btn-wpp-cliente:hover{background:rgba(37,211,102,.2)}
+
+.turno-timestamp{font-size:.6rem;color:var(--t4);margin-top:.5rem}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .ico{font-size:3rem;opacity:.2;display:block;margin-bottom:1rem}
+.empty-state p{color:var(--t3);font-size:.9rem}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,169,110,.08);margin-bottom:2rem}
+.stat-card{background:var(--dark2);padding:1.2rem;text-align:center}
+.stat-card strong{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;display:block;line-height:1}
+.stat-card small{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--t3)}
+.stat-pending strong{color:#F59E0B}
+.stat-ok strong{color:#22C55E}
+.stat-total strong{color:var(--gold)}
+
+/* MODAL APROBAR */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--dark);border:1px solid rgba(201,169,110,.2);
+  padding:2rem;width:100%;max-width:440px;
+}
+.modal-box h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--cream);margin-bottom:.4rem}
+.modal-box p{font-size:.82rem;color:var(--t3);margin-bottom:1.5rem}
+.modal-detail{background:rgba(255,255,255,.03);border:1px solid rgba(201,169,110,.1);padding:1rem;margin-bottom:1.5rem}
+.modal-detail p{font-size:.82rem;color:var(--t2);margin-bottom:.3rem}
+.modal-detail strong{color:var(--cream)}
+.modal-actions{display:flex;gap:.75rem}
+.modal-actions button{flex:1;padding:.8rem;font-family:'Outfit',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s}
+.modal-confirm{background:var(--green);color:white}
+.modal-confirm:hover{background:#16a34a}
+.modal-cancel{background:rgba(255,255,255,.06);color:var(--t2)}
+.modal-cancel:hover{background:rgba(255,255,255,.1)}
+
+/* CAL MINI PREVIEW */
+.cal-preview{background:var(--dark2);border:1px solid rgba(201,169,110,.1);padding:1.2rem;margin-bottom:2rem}
+.cal-preview h4{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;color:var(--cream);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.cal-today-slots{display:flex;flex-wrap:wrap;gap:.4rem}
+.cal-slot{padding:.35rem .7rem;font-size:.7rem;border-radius:2px}
+.slot-libre{background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.2)}
+.slot-ocupado{background:rgba(239,68,68,.08);color:rgba(239,68,68,.6);border:1px solid rgba(239,68,68,.15)}
+
+/* Responsive */
+@media(max-width:600px){
+  .turno-card{grid-template-columns:1fr}
+  .turno-actions{flex-direction:row;flex-wrap:wrap}
+  .turno-actions button,.turno-actions a{flex:1;min-width:100px}
+  .stats-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">beauty<span>studio</span>.gg</div>
+    <div class="login-sub">Panel de administración · Turnos</div>
+    <label>Contraseña</label>
+    <input type="password" id="passInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" onclick="doLogin()">Ingresar</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div class="panel" id="panel">
+  <nav class="panel-nav">
+    <div class="panel-nav-logo">beauty<span>studio</span>.gg · <span style="font-size:.85rem;color:var(--t3)">Turnos</span></div>
+    <div class="panel-nav-right">
+      <span class="badge-count" id="pendingBadge">0 pendientes</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <div class="panel-body">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card stat-pending">
+        <strong id="statPending">0</strong>
+        <small>Pendientes</small>
+      </div>
+      <div class="stat-card stat-ok">
+        <strong id="statOk">0</strong>
+        <small>Aprobados</small>
+      </div>
+      <div class="stat-card stat-total">
+        <strong id="statTotal">0</strong>
+        <small>Total</small>
+      </div>
+    </div>
+
+    <!-- HORARIOS DE HOY -->
+    <div class="cal-preview">
+      <h4>📅 Horarios de hoy</h4>
+      <div class="cal-today-slots" id="todaySlots">Cargando...</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('pendientes')" id="tab-pendientes">
+        Pendientes <span class="tab-count red" id="cnt-pendientes">0</span>
+      </button>
+      <button class="tab-btn" onclick="showTab('aprobados')" id="tab-aprobados">
+        Aprobados <span class="tab-count" id="cnt-aprobados">0</span>
+      </button>
+      <button class="tab-btn" onclick="showTab('rechazados')" id="tab-rechazados">
+        Rechazados <span class="tab-count" id="cnt-rechazados">0</span>
+      </button>
+    </div>
+
+    <!-- LISTAS -->
+    <div id="list-pendientes"></div>
+    <div id="list-aprobados" style="display:none"></div>
+    <div id="list-rechazados" style="display:none"></div>
+
+  </div>
+</div>
+
+<!-- MODAL APROBAR -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">Confirmar turno</h3>
+    <p id="modalDesc">¿Querés aprobar este turno? Se le enviará una notificación al cliente.</p>
+    <div class="modal-detail" id="modalDetail"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="modal-confirm" id="modalConfirmBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CONFIGURACIÓN — REEMPLAZAR CON DATOS DE FIREBASE
+// ═══════════════════════════════════════════════
+
+// ⚠️  IMPORTANTE: Reemplazá estos valores con tu proyecto de Firebase
+const FIREBASE_CONFIG = {
+  apiKey: "TU_API_KEY",
+  databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+};
+
+// Contraseña del panel (cambiar por una segura)
+const ADMIN_PASSWORD = "beautystudio2025";
+
+// Número WhatsApp de la dueña
+const WPP_DUENA = "541132598195";
+
+// ═══════════════════════════════════════════════
+//  HORARIOS
+// ═══════════════════════════════════════════════
+const SLOTS = ['9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00'];
+
+// ═══════════════════════════════════════════════
+//  DATOS EN MEMORIA (sin Firebase configurado)
+//  Reemplazar con Firebase cuando esté listo
+// ═══════════════════════════════════════════════
+let turnos = JSON.parse(localStorage.getItem('bgg_admin_turnos') || '[]');
+let modalAction = null;
+let modalTurnoId = null;
+
+function saveTurnos() {
+  localStorage.setItem('bgg_admin_turnos', JSON.stringify(turnos));
+  // También sincronizar con el sistema de la web principal
+  syncWithMainSite();
+}
+
+function syncWithMainSite() {
+  // Crear estructura compatible con el sistema de la web principal
+  const taken = {};
+  turnos.filter(t => t.estado === 'aprobado').forEach(t => {
+    if (!taken[t.fecha]) taken[t.fecha] = [];
+    if (!taken[t.fecha].includes(t.hora)) taken[t.fecha].push(t.hora);
+  });
+  localStorage.setItem('bgg_v3', JSON.stringify(taken));
+}
+
+// ═══════════════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════════════
+function doLogin() {
+  const pass = document.getElementById('passInput').value;
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+    renderAll();
+    loadTodaySlots();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('passInput').value = '';
+  }
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('panel').style.display = 'none';
+  document.getElementById('passInput').value = '';
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+function renderAll() {
+  const pendientes = turnos.filter(t => t.estado === 'pendiente');
+  const aprobados  = turnos.filter(t => t.estado === 'aprobado');
+  const rechazados = turnos.filter(t => t.estado === 'rechazado');
+
+  // Stats
+  document.getElementById('statPending').textContent = pendientes.length;
+  document.getElementById('statOk').textContent = aprobados.length;
+  document.getElementById('statTotal').textContent = turnos.length;
+  document.getElementById('pendingBadge').textContent = pendientes.length + (pendientes.length === 1 ? ' pendiente' : ' pendientes');
+
+  // Counts en tabs
+  document.getElementById('cnt-pendientes').textContent = pendientes.length;
+  document.getElementById('cnt-aprobados').textContent = aprobados.length;
+  document.getElementById('cnt-rechazados').textContent = rechazados.length;
+
+  // Listas
+  renderList('pendientes', pendientes);
+  renderList('aprobados', aprobados);
+  renderList('rechazados', rechazados);
+}
+
+function renderList(tipo, lista) {
+  const container = document.getElementById('list-' + tipo);
+
+  if (lista.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <span class="ico">${tipo === 'pendientes' ? '📭' : tipo === 'aprobados' ? '✅' : '❌'}</span>
+        <p>No hay turnos ${tipo} por ahora</p>
+      </div>`;
+    return;
+  }
+
+  // Ordenar por fecha y hora
+  lista = [...lista].sort((a,b) => {
+    const da = a.fecha + ' ' + a.hora;
+    const db = b.fecha + ' ' + b.hora;
+    return da.localeCompare(db);
+  });
+
+  container.innerHTML = lista.map(t => `
+    <div class="turno-card" id="card-${t.id}">
+      <div class="turno-info">
+        <div class="turno-nombre">${escapeHtml(t.nombre)}</div>
+        <div class="turno-meta">
+          <span class="turno-badge badge-fecha">📅 ${formatFecha(t.fecha)}</span>
+          <span class="turno-badge badge-hora">🕐 ${t.hora}hs</span>
+          <span class="turno-badge badge-srv">${escapeHtml(t.servicio)}</span>
+          <span class="turno-badge badge-${t.estado}">${estadoLabel(t.estado)}</span>
+        </div>
+        <div class="turno-tel">📱 ${escapeHtml(t.telefono)}</div>
+        ${t.nota ? `<div class="turno-nota">"${escapeHtml(t.nota)}"</div>` : ''}
+        <div class="turno-timestamp">Solicitado: ${formatTimestamp(t.timestamp)}</div>
+      </div>
+      <div class="turno-actions">
+        ${tipo === 'pendientes' ? `
+          <button class="btn-aprobar" onclick="confirmarAccion('aprobar','${t.id}')">✓ Aprobar</button>
+          <button class="btn-rechazar" onclick="confirmarAccion('rechazar','${t.id}')">✕ Rechazar</button>
+        ` : ''}
+        ${tipo === 'aprobados' ? `
+          <button class="btn-rechazar" onclick="confirmarAccion('rechazar','${t.id}')">✕ Cancelar</button>
+        ` : ''}
+        ${tipo === 'rechazados' ? `
+          <button class="btn-aprobar" onclick="confirmarAccion('aprobar','${t.id}')">✓ Aprobar</button>
+        ` : ''}
+        <a class="btn-wpp-cliente" href="https://wa.me/${limpiarTel(t.telefono)}?text=${encodeURIComponent(msgCliente(t, tipo))}" target="_blank">
+          💬 WhatsApp
+        </a>
+        ${tipo === 'aprobados' ? `
+          <a class="btn-wpp-cliente" href="${googleCalendarUrl(t)}" target="_blank" style="color:#4285F4;border-color:rgba(66,133,244,.2);background:rgba(66,133,244,.08)">
+            📆 Google Cal
+          </a>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadTodaySlots() {
+  const today = fmtDate(new Date());
+  const aprobadosHoy = turnos.filter(t => t.fecha === today && t.estado === 'aprobado').map(t => t.hora);
+  const container = document.getElementById('todaySlots');
+
+  if (SLOTS.length === 0) {
+    container.innerHTML = '<span style="color:var(--t3);font-size:.78rem">Sin horarios configurados</span>';
+    return;
+  }
+
+  container.innerHTML = SLOTS.map(s => `
+    <span class="cal-slot ${aprobadosHoy.includes(s) ? 'slot-ocupado' : 'slot-libre'}">
+      ${s}hs ${aprobadosHoy.includes(s) ? '✕' : '✓'}
+    </span>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════
+function showTab(tipo) {
+  ['pendientes','aprobados','rechazados'].forEach(t => {
+    document.getElementById('list-' + t).style.display = t === tipo ? 'block' : 'none';
+    document.getElementById('tab-' + t).classList.toggle('active', t === tipo);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  MODAL CONFIRMAR
+// ═══════════════════════════════════════════════
+function confirmarAccion(accion, id) {
+  const t = turnos.find(x => x.id === id);
+  if (!t) return;
+  modalAction = accion;
+  modalTurnoId = id;
+
+  const isAprobar = accion === 'aprobar';
+  document.getElementById('modalTitle').textContent = isAprobar ? '✓ Aprobar turno' : '✕ Rechazar turno';
+  document.getElementById('modalDesc').textContent = isAprobar
+    ? 'Al aprobar, el horario quedará bloqueado en la web. Podés enviarle WhatsApp al cliente.'
+    : 'Al rechazar, el horario quedará libre nuevamente.';
+  document.getElementById('modalDetail').innerHTML = `
+    <p><strong>${escapeHtml(t.nombre)}</strong></p>
+    <p>${t.servicio}</p>
+    <p>📅 ${formatFecha(t.fecha)} · 🕐 ${t.hora}hs</p>
+    <p>📱 ${escapeHtml(t.telefono)}</p>
+  `;
+
+  const btn = document.getElementById('modalConfirmBtn');
+  btn.textContent = isAprobar ? '✓ Confirmar aprobación' : '✕ Confirmar rechazo';
+  btn.style.background = isAprobar ? 'var(--green)' : 'var(--red)';
+  btn.onclick = ejecutarAccion;
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function ejecutarAccion() {
+  const t = turnos.find(x => x.id === modalTurnoId);
+  if (!t) return;
+
+  t.estado = modalAction === 'aprobar' ? 'aprobado' : 'rechazado';
+  t.updatedAt = new Date().toISOString();
+
+  saveTurnos();
+  renderAll();
+  loadTodaySlots();
+  closeModal();
+
+  // Si aprueba, abrir Google Calendar con el evento pre-llenado
+  if (modalAction === 'aprobar') {
+    setTimeout(() => {
+      if (confirm('¿Querés agregar este turno a Google Calendar ahora?')) {
+        window.open(googleCalendarUrl(t), '_blank');
+      }
+    }, 300);
+  }
+
+  // Opción de enviar WhatsApp al cliente
+  setTimeout(() => {
+    if (confirm(`¿Enviarle WhatsApp a ${t.nombre} para ${modalAction === 'aprobar' ? 'confirmar' : 'informar el rechazo'}?`)) {
+      window.open('https://wa.me/' + limpiarTel(t.telefono) + '?text=' + encodeURIComponent(msgCliente(t, modalAction === 'aprobar' ? 'aprobados' : 'rechazados')), '_blank');
+    }
+  }, 600);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
+function fmtDate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function formatFecha(ds) {
+  if (!ds) return '-';
+  const [y,m,d] = ds.split('-').map(Number);
+  const fecha = new Date(y, m-1, d);
+  return fecha.toLocaleDateString('es-AR', {weekday:'short', day:'numeric', month:'short'});
+}
+
+function formatTimestamp(ts) {
+  if (!ts) return '-';
+  return new Date(ts).toLocaleString('es-AR', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+
+function estadoLabel(e) {
+  return {pendiente:'⏳ Pendiente', aprobado:'✓ Aprobado', rechazado:'✕ Rechazado'}[e] || e;
+}
+
+function limpiarTel(tel) {
+  return tel.replace(/\D/g,'') || '';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function msgCliente(t, tipo) {
+  const nombre = t.nombre.split(' ')[0];
+  if (tipo === 'aprobados') {
+    return `¡Hola ${nombre}! 🌸 Tu turno está *confirmado*.\n\n✅ *${t.servicio}*\n📅 ${formatFecha(t.fecha)}\n🕐 ${t.hora}hs\n\nTe espero en el estudio. Si necesitás cancelar, avisame con anticipación. ✨\n\n— beautystudio.gg`;
+  } else {
+    return `¡Hola ${nombre}! Te escribo de beautystudio.gg.\n\nLamentablemente no tengo disponibilidad para el *${formatFecha(t.fecha)} a las ${t.hora}hs*.\n\n¿Querés que coordinemos otro día y horario? 🌸`;
+  }
+}
+
+function googleCalendarUrl(t) {
+  const [y,m,d] = t.fecha.split('-').map(Number);
+  const [h,min] = t.hora.split(':').map(Number);
+  const start = new Date(y,m-1,d,h,min||0);
+  const end = new Date(start.getTime() + 90*60*1000); // +90min por defecto
+
+  const fmt = dt => dt.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE`
+    + `&text=${encodeURIComponent(t.servicio + ' — ' + t.nombre)}`
+    + `&dates=${fmt(start)}/${fmt(end)}`
+    + `&details=${encodeURIComponent('📱 ' + t.telefono + (t.nota ? '\n📝 ' + t.nota : '') + '\n\nTurno via beautystudio.gg')}`
+    + `&location=${encodeURIComponent('Vicente López, Buenos Aires')}`;
+}
+
+// ═══════════════════════════════════════════════
+//  RECIBIR SOLICITUDES DE LA WEB PRINCIPAL
+//  (via localStorage - mismo dominio)
+// ═══════════════════════════════════════════════
+function checkNewRequests() {
+  const queue = JSON.parse(localStorage.getItem('bgg_queue') || '[]');
+  if (queue.length > 0) {
+    queue.forEach(req => {
+      if (!turnos.find(t => t.id === req.id)) {
+        turnos.push({ ...req, estado: 'pendiente', timestamp: req.timestamp || new Date().toISOString() });
+      }
+    });
+    localStorage.setItem('bgg_queue', '[]');
+    saveTurnos();
+    renderAll();
+    loadTodaySlots();
+  }
+}
+
+// Chequear nuevas solicitudes cada 30 segundos
+setInterval(checkNewRequests, 30000);
+checkNewRequests();
+
+// ═══════════════════════════════════════════════
+//  DEMO DATA — para ver cómo se ve el panel
+// ═══════════════════════════════════════════════
+function loadDemoData() {
+  if (turnos.length === 0) {
+    const hoy = fmtDate(new Date());
+    const manana = fmtDate(new Date(Date.now() + 86400000));
+    turnos = [
+      { id: 'demo1', nombre: 'Valentina Méndez', telefono: '+54 11 5555-1234', servicio: 'Lifting de Pestañas', fecha: hoy, hora: '10:00', nota: '', estado: 'pendiente', timestamp: new Date().toISOString() },
+      { id: 'demo2', nombre: 'Sofía Ramírez', telefono: '+54 11 5555-5678', servicio: 'Laminado de Cejas', fecha: hoy, hora: '14:00', nota: 'Primera vez, tengo cejas muy finas', estado: 'pendiente', timestamp: new Date(Date.now()-3600000).toISOString() },
+      { id: 'demo3', nombre: 'Martina García', telefono: '+54 11 5555-9012', servicio: 'Extensión de Pestañas', fecha: manana, hora: '11:00', nota: '', estado: 'aprobado', timestamp: new Date(Date.now()-86400000).toISOString() },
+      { id: 'demo4', nombre: 'Rodrigo López', telefono: '+54 11 5555-3456', servicio: 'Limpieza Facial', fecha: manana, hora: '16:00', nota: '', estado: 'rechazado', timestamp: new Date(Date.now()-172800000).toISOString() },
+    ];
+    saveTurnos();
+  }
+}
+
+loadDemoData();
+renderAll();
+loadTodaySlots();
+</script>
+</body>
+</html>
