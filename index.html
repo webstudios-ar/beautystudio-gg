@@ -808,6 +808,42 @@ function elegirSlot(s,btn){
   btn.classList.add('sel');selSlot=s;
 }
 
+// ── FIREBASE CONFIG ──
+const FB_DB = "https://beautystudio-gg-default-rtdb.firebaseio.com";
+
+function guardarEnFirebase(turno) {
+  fetch(FB_DB + '/turnos/' + turno.id + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(turno)
+  }).catch(e => console.log('Firebase error:', e));
+}
+
+function bloquearSlotFirebase(fecha, hora) {
+  const key = fecha + '_' + hora.replace(':','');
+  fetch(FB_DB + '/slots_tomados/' + key + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({fecha, hora, ts: new Date().toISOString()})
+  }).catch(e => console.log('Firebase error:', e));
+}
+
+function sincronizarSlotsFirebase() {
+  fetch(FB_DB + '/slots_tomados.json')
+    .then(r => r.json())
+    .then(data => {
+      if (!data) return;
+      const taken = {};
+      Object.values(data).forEach(s => {
+        if (!taken[s.fecha]) taken[s.fecha] = [];
+        if (!taken[s.fecha].includes(s.hora)) taken[s.fecha].push(s.hora);
+      });
+      localStorage.setItem(LS, JSON.stringify(taken));
+      renderCal();
+    }).catch(e => console.log('Firebase sync error:', e));
+}
+sincronizarSlotsFirebase();
+
 function enviarWpp(){
   const nom=document.getElementById('f-nom').value.trim();
   const tel=document.getElementById('f-tel').value.trim();
