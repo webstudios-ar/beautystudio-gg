@@ -272,9 +272,60 @@ body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--t1);min
 
 // ⚠️  IMPORTANTE: Reemplazá estos valores con tu proyecto de Firebase
 const FIREBASE_CONFIG = {
-  apiKey: "TU_API_KEY",
-  databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+  apiKey: "AIzaSyB7qOASNuTpw75G9t1Ltqm1_F2ivGfIz3U",
+  databaseURL: "https://beautystudio-gg-default-rtdb.firebaseio.com",
+  projectId: "beautystudio-gg",
 };
+
+
+const FB_DB = "https://beautystudio-gg-default-rtdb.firebaseio.com";
+
+async function loadFromFirebase() {
+  try {
+    const resp = await fetch(FB_DB + '/turnos.json');
+    const data = await resp.json();
+    if (data) {
+      Object.values(data).forEach(ft => {
+        const idx = turnos.findIndex(t => t.id === ft.id);
+        if (idx >= 0) turnos[idx] = ft;
+        else turnos.push(ft);
+      });
+      localStorage.setItem('bgg_admin_turnos', JSON.stringify(turnos));
+    }
+  } catch(e) { console.log('Firebase load error:', e); }
+  renderAll();
+  loadTodaySlots();
+}
+
+async function checkFirebase() {
+  try {
+    const resp = await fetch(FB_DB + '/turnos.json');
+    const data = await resp.json();
+    if (!data) return;
+    let hasNew = false;
+    Object.values(data).forEach(ft => {
+      const existing = turnos.find(t => t.id === ft.id);
+      if (!existing) { turnos.push(ft); hasNew = true; }
+    });
+    if (hasNew) {
+      localStorage.setItem('bgg_admin_turnos', JSON.stringify(turnos));
+      renderAll(); loadTodaySlots();
+    }
+  } catch(e) {}
+}
+
+function syncSlotsFirebase() {
+  const slots = {};
+  turnos.filter(t => t.estado === 'aprobado').forEach(t => {
+    const key = t.fecha + '_' + t.hora.replace(':','');
+    slots[key] = {fecha: t.fecha, hora: t.hora, ts: t.updatedAt || t.timestamp};
+  });
+  fetch(FB_DB + '/slots_tomados.json', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(Object.keys(slots).length ? slots : null)
+  }).catch(e => console.log('slots error:', e));
+}
 
 // Contraseña del panel (cambiar por una segura)
 const ADMIN_PASSWORD = "beautystudio2025";
@@ -297,8 +348,16 @@ let modalTurnoId = null;
 
 function saveTurnos() {
   localStorage.setItem('bgg_admin_turnos', JSON.stringify(turnos));
-  // También sincronizar con el sistema de la web principal
   syncWithMainSite();
+  // Guardar en Firebase
+  const data = {};
+  turnos.forEach(t => { data[t.id] = t; });
+  fetch(FB_DB + '/turnos.json', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  }).catch(e => console.log('Firebase save error:', e));
+  syncSlotsFirebase();
 }
 
 function syncWithMainSite() {
@@ -601,8 +660,8 @@ function loadDemoData() {
 }
 
 loadDemoData();
-renderAll();
-loadTodaySlots();
+loadFromFirebase();
+setInterval(checkFirebase, 15000);
 </script>
 </body>
 </html>
