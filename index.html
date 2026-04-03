@@ -405,6 +405,29 @@ footer{background:var(--dark);border-top:1px solid rgba(201,169,110,.06);padding
   .ft-cols{display:contents}
   .ft-brand{margin-bottom:0}
 }
+
+.srv-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+.srv-precio{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--gold)}
+#faq{background:var(--black)}
+.faq-list{margin-top:2rem;display:flex;flex-direction:column;gap:1px;background:rgba(201,169,110,.08)}
+.faq-item{background:var(--dark);overflow:hidden}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:1.3rem 1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:background .2s;min-height:44px}
+.faq-q:hover,.faq-q:active{background:rgba(201,169,110,.04)}
+.faq-q span{font-size:.92rem;font-weight:400;color:var(--cream);line-height:1.4}
+.faq-icon{width:22px;height:22px;min-width:22px;border-radius:50%;border:1px solid rgba(201,169,110,.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-item.open .faq-a{max-height:400px}
+.faq-a p{padding:.2rem 1.5rem 1.4rem;font-size:.85rem;color:var(--t3);line-height:1.85;font-weight:300}
+.faq-a p a{color:var(--gold);text-decoration:none}
+#info-extra{background:var(--dark)}
+.info-grid{display:grid;grid-template-columns:1fr;gap:1px;background:rgba(201,169,110,.08);margin-top:2rem}
+.info-card{background:var(--dark2);padding:1.8rem 1.5rem}
+.info-card h4{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.info-card p,.info-card li{font-size:.82rem;color:var(--t3);line-height:1.85}
+.info-card ul{list-style:none;padding:0}
+.info-card ul li{padding:.2rem 0;display:flex;align-items:flex-start;gap:.5rem}
+.info-card ul li::before{content:'·';color:var(--gold);flex-shrink:0}
 </style>
 </head>
 <body>
@@ -486,37 +509,37 @@ footer{background:var(--dark);border-top:1px solid rgba(201,169,110,.06);padding
         <div class="srv-top"><div class="srv-n">01</div><span class="srv-ico">👁️</span></div>
         <h3 class="srv-name">Extensión de Pestañas</h3>
         <p class="srv-desc">Volumen y definición personalizados según la forma de tu ojo. Técnica pelo a pelo, volumen ruso o híbrido.</p>
-        <span class="srv-dur">⏱ 90 – 120 min</span>
+        <div class="srv-footer"><span class="srv-dur">⏱ 90 – 120 min</span><span class="srv-precio" id="precio-srv1"></span></div>
       </div>
       <div class="srv-card">
         <div class="srv-top"><div class="srv-n">02</div><span class="srv-ico">✨</span></div>
         <h3 class="srv-name">Lifting de Pestañas</h3>
         <p class="srv-desc">Levantamiento y rizado de tus propias pestañas. Efecto natural que dura hasta 8 semanas. Incluye tinte.</p>
-        <span class="srv-dur">⏱ 60 min</span>
+        <div class="srv-footer"><span class="srv-dur">⏱ 60 min</span><span class="srv-precio" id="precio-srv2"></span></div>
       </div>
       <div class="srv-card">
         <div class="srv-top"><div class="srv-n">03</div><span class="srv-ico">🌿</span></div>
         <h3 class="srv-name">Laminado de Cejas</h3>
         <p class="srv-desc">Cejas más pobladas, prolijas y definidas. Incluye diseño y depilación. Dura 4 a 6 semanas.</p>
-        <span class="srv-dur">⏱ 60 min</span>
+        <div class="srv-footer"><span class="srv-dur">⏱ 60 min</span><span class="srv-precio" id="precio-srv3"></span></div>
       </div>
       <div class="srv-card">
         <div class="srv-top"><div class="srv-n">04</div><span class="srv-ico">💆</span></div>
         <h3 class="srv-name">Limpieza Facial</h3>
         <p class="srv-desc">Limpieza profunda, hidratación y tratamiento personalizado. Para hombres y mujeres. Relajante y efectivo.</p>
-        <span class="srv-dur">⏱ 75 min</span>
+        <div class="srv-footer"><span class="srv-dur">⏱ 75 min</span><span class="srv-precio" id="precio-srv4"></span></div>
       </div>
       <div class="srv-card">
         <div class="srv-top"><div class="srv-n">05</div><span class="srv-ico">🌟</span></div>
         <h3 class="srv-name">Tratamientos Faciales</h3>
         <p class="srv-desc">Hidratación profunda, anti-age, luminosidad y más. Protocolos adaptados a las necesidades de tu piel.</p>
-        <span class="srv-dur">⏱ 60 – 90 min</span>
+        <div class="srv-footer"><span class="srv-dur">⏱ 60 – 90 min</span><span class="srv-precio" id="precio-srv5"></span></div>
       </div>
       <div class="srv-card">
         <div class="srv-top"><div class="srv-n">06</div><span class="srv-ico">🎁</span></div>
         <h3 class="srv-name">Gift Card</h3>
         <p class="srv-desc">Regalale una experiencia de belleza a alguien especial. Disponible en distintos valores y servicios.</p>
-        <span class="srv-dur">Regalo perfecto</span>
+        <div class="srv-footer"><span class="srv-dur">Regalo perfecto</span></div>
       </div>
     </div>
   </div>
@@ -691,6 +714,75 @@ footer{background:var(--dark);border-top:1px solid rgba(201,169,110,.06);padding
         <div class="esp-det"><span class="esp-ico">🕐</span><div><strong>Horarios</strong><p>Lunes a Sábados · 9 a 18hs</p></div></div>
         <div class="esp-det"><span class="esp-ico">📲</span><div><strong>Contacto</strong><p>@beautystudio.gg · <a href="https://wa.me/541132598195" style="color:var(--gold);text-decoration:none">WhatsApp</a></p></div></div>
         <a href="#turnos" class="btn-gold" style="margin-top:2rem;max-width:240px">Reservar ahora</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div id="faq">
+  <div class="sec-wrap">
+    <div class="sec-lbl"><span>Preguntas frecuentes</span></div>
+    <h2 class="sec-h">Todo lo que<br><em>querés saber.</em></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Cuánto dura el lifting de pestañas?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>El lifting dura entre 6 y 8 semanas según el ciclo de crecimiento de tus pestañas. Te recomendamos evitar mojarlas las primeras 24 horas y no usar máscaras aceitosas para prolongar el resultado.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Me tengo que preparar de alguna forma antes del turno?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>Para pestañas: llegá sin máscara ni delineador. Para cejas: no las depiles los días previos. Para limpieza facial: llegá sin maquillaje. En todos los casos, llegá a horario para aprovechar el tiempo completo.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Atienden hombres también?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>¡Sí! La limpieza facial y los tratamientos faciales están disponibles para hombres y mujeres. Cada tratamiento se adapta al tipo de piel de cada persona.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Cómo funciona el sistema de turnos?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>Elegís el servicio, la fecha y el horario en el calendario. Al confirmar, se abre WhatsApp con tu solicitud pre-armada. El turno queda confirmado cuando recibís nuestra respuesta. Los horarios bloqueados ya están reservados.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Puedo regalar un tratamiento?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>¡Claro! Tenemos gift cards para cualquier servicio o monto. Son el regalo perfecto para cumpleaños, Día de la Madre o cualquier ocasión especial. Consultános por WhatsApp para coordinar.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Qué pasa si necesito cancelar mi turno?</span><div class="faq-icon">+</div></button>
+        <div class="faq-a"><p>Entendemos que pueden surgir imprevistos. Te pedimos que avises con al menos <strong style="color:var(--cream)">24 horas de anticipación</strong> por <a href="https://wa.me/541132598195">WhatsApp</a> para liberar el horario. Las cancelaciones reiteradas de último momento pueden afectar futuras reservas.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO EXTRA -->
+<div id="info-extra">
+  <div class="sec-wrap">
+    <div class="sec-lbl"><span>Información útil</span></div>
+    <h2 class="sec-h">Lo que necesitás<br><em>saber antes.</em></h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h4>ð Cómo llegar</h4>
+        <p>Trabajamos en un homestudio en <strong style="color:var(--cream)">Vicente López, Buenos Aires</strong>. La dirección exacta se envía al confirmar el turno.</p>
+        <p style="margin-top:.8rem">Zona con fácil acceso en auto y transporte público. Te mandamos las indicaciones por WhatsApp.</p>
+      </div>
+      <div class="info-card">
+        <h4>ð Política de cancelación</h4>
+        <ul>
+          <li>Avisá con <strong style="color:var(--cream)">24 hs de anticipación</strong> mínimo</li>
+          <li>Cancelaciones por WhatsApp únicamente</li>
+          <li>Los turnos no cancelados a tiempo se pierden</li>
+          <li>Llegá puntual — el tiempo no es recuperable</li>
+          <li>Reprogramaciones sujetas a disponibilidad</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>✨ Cuidados post-tratamiento</h4>
+        <ul>
+          <li>Pestañas: no mojar las primeras 24 hs</li>
+          <li>Lifting: evitar calor directo 48 hs</li>
+          <li>Cejas: no mojar ni exfoliar 24 hs</li>
+          <li>Facial: protector solar, sin maquillaje inmediato</li>
+          <li>Siempre hidratá la zona tratada</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -899,6 +991,25 @@ document.querySelectorAll('.srv-card,.res-card,.live-card,.flow-item').forEach(e
 });
 
 initCal();
+
+function toggleFaq(btn){
+  var item=btn.parentElement;
+  var isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el){el.classList.remove('open');});
+  if(!isOpen)item.classList.add('open');
+}
+function cargarPrecios(){
+  fetch('https://beautystudio-gg-default-rtdb.firebaseio.com/servicios.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data)return;
+      Object.values(data).forEach(function(srv){
+        var el=document.getElementById('precio-'+srv.id);
+        if(el&&srv.precio>0){el.textContent='$'+Number(srv.precio).toLocaleString('es-AR');}
+      });
+    }).catch(function(){});
+}
+cargarPrecios();
 </script>
 </body>
 </html>
